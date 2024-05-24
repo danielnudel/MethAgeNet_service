@@ -1,0 +1,77 @@
+
+To use this predictor you should have .hist files, and summary file. If you don't have summary file you can create one manualy, explained in Section 1.
+
+
+Section 1, Creating Summary File manualy:
+----------------------------------------------------------------------------------------------------------------------------------------------------------------------
+If you don't have summary file, then you should create one. You can skip this section if you do have a summary file.
+The format of the summary file is a csv document with three mandatory fields: "Sample #", "Gene", "Sample".
+Without these you will get an error.
+
+"Sample #" is the number of the sample. The .hist files name should include this number, usually the format of the names of .hist files is "Sample_123_CpG.hist"
+"Gene" is the marker, usually you will find it as the first line of the .hist file.
+"Sample" is the name of the sample. The format of the name doesn't matter, but it should be unique for each person/set of markers related to one person.
+
+For for example if you have only three .hist files:
+Sample_1_CpG.hist for marker ABC
+Sample_2_CpG.hist for marker DEF
+Sample_3_CpG.hist for marker GHI
+
+Then your summary file should look like this(at least):
+----------------------------
+| Sample # | Gene | Sample |
+----------------------------
+|    1     | ABC  | CON123 | 
+----------------------------
+|    2     | DEF  | CON123 | 
+----------------------------
+|    3     | GHI  | CON123 | 
+----------------------------
+
+----------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+
+
+Section 2, Usage:
+----------------------------------------------------------------------------------------------------------------------------------------------------------------------
+Assume your histogram files are at:
+
+/comp/my/files/hists
+
+And your summary file is at:
+
+/comp/my/files/summary.csv
+
+
+The usage is in two steps:
+
+Step 1:
+Pre process the data:
+python pre_process_data.py --hists_path /comp/my/files/hists --summary_file /comp/my/files/summary.csv -out /comp/my/files/out --reads_threshold 800 
+--reads_per_sample 8192 --num_sub_samples 128
+
+
+Step 2:
+Run the predictor:
+python predictor.py --marker all --data_directory /comp/my/files/out --output_directory /comp/my/files/results
+
+----------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+
+
+Section 3, Output:
+----------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+For the marker (or for each marker in case you run predictor with --marker all) will be created a _results_<marker>.csv file.
+This file will have a line for each unique sample name (like the ones in the summary file) with the predicted age and some statistics (stddev, 25, 50, 75 quartiles):
+For example:
+
+---------------------------------------------------------------------------------------------------------
+| sample_name | prediction | standard_deviation |       25        |        50        |         75       | 
+---------------------------------------------------------------------------------------------------------
+| CON123      | 29.39      | 0.5                | 29.087842464447 | 29.3818244934082 | 29.6514410972595 |
+---------------------------------------------------------------------------------------------------------
+
+----------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+
