@@ -1,12 +1,7 @@
-import argparse
-import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
-import sys
-import os
 
 import torch
-import torch.optim as optim
 from torch.utils.data import Dataset
 from torch.utils.data import DataLoader
 import torch.nn.functional as F
@@ -66,7 +61,7 @@ def predict(marker, hist):
     device = torch.device('cpu')
     input_size, layer_size, num_layers = MODEL_PARAMETERS[marker]
     predictor = Predictor(input_size, layer_size, num_layers)
-    predictor.load_state_dict(torch.load("/cs/cbio/daniel/magenet_service/predictor/models/predictor_" + marker + '_' + str(input_size)))
+    predictor.load_state_dict(torch.load("pages/predictor/models/predictor_" + marker + '_' + str(input_size)))
     predictor.to(device)
     test_data = CustomDataset(hist)
     test_dataloader = DataLoader(test_data, batch_size=len(test_data), shuffle=False, num_workers=4)
