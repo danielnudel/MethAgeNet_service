@@ -286,28 +286,11 @@ def concat(dict_by_marker):
         final_df = pd.DataFrame()
         marker_name = '_'.join(markers_to_concat)
         print("Concatinating ", marker_name, file=sys.stderr)
-        empty_markers_counter = {}
         for marker in markers_to_concat:
             if marker not in dict_by_marker:
-                continue
-            df = dict_by_marker[marker]
-            if len(markers_to_concat) > 3:
-                for sample_name in df[df['total_reads_origin'] == 0]['sample_name'].unique():
-                    if sample_name in empty_markers_counter:
-                        empty_markers_counter[sample_name] += 1
-                    else:
-                        empty_markers_counter[sample_name] = 1
-            if final_df.empty:
-                final_df = df
-                continue
-            else:
-                df.drop(columns=['sample_name'], inplace=True)
+                break
+            df = pd.DataFrame(dict_by_marker[marker][0])
             final_df = pd.concat([final_df, df], axis=1)
-        for sample_name in empty_markers_counter:
-            if empty_markers_counter[sample_name] > 0:
-                final_df = final_df[final_df['sample_name'] != sample_name]
-        if len(empty_markers_counter) > 3:
-            final_df = final_df.fillna(final_df.mean(numeric_only=True))
         final_dfs[marker_name] = final_df
     return final_dfs
 

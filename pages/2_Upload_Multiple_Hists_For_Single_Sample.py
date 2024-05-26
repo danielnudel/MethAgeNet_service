@@ -15,6 +15,8 @@ if len(files_s) > 0:
     if not dict_by_loci:
         st.write('Something is wrong')
     final_dfs = concat(dict_by_loci)
+    if not final_dfs:
+        st.write("No good markers")
     for marker in final_dfs:
         hist = final_dfs[marker]
         hist = hist[hist.columns.drop(list(hist.filter(regex='Unnamed*')))]
