@@ -24,5 +24,5 @@ for name in all_hists_by_sample_d:
         age, _, _, _, _ = predict(marker, pd.DataFrame(hist))
         ages.append(age)
         columns.append(marker)
-    df = pd.DataFrame(ages, columns=columns)
+    df = pd.DataFrame([ages], columns=columns)
     st.write(df)
