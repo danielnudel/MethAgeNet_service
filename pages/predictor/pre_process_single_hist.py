@@ -312,8 +312,9 @@ def hist_cohort_pre_processing(files, summary):
     sample_summary_df["Gene"] = sample_summary_df["Gene"].str.strip()
     for sample in sample_summary_df.groupby('Sample'):
         sample_files = sample[1]['Sample #'].tolist()
+        sample_files = ['Sample_' + str(num) + '_CpG.hist' for num in sample_files]
         sample_name = sample[0]
-        files_for_sample = [file for file in files if file.name in sample_files]
+        files_for_sample = [files[file] for file in files if file in sample_files]
         hists_dict = hist_from_multiple_dfs_pre_processing(files_for_sample)
         hists_dict_all = concat(hists_dict)
         for hist in hists_dict:
