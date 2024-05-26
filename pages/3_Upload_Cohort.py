@@ -5,7 +5,8 @@ import pandas as pd
 from pages.predictor.pre_process_single_hist import hist_cohort_pre_processing
 from pages.predictor.predictor import predict
 
-st.write("Upload multiple hists here")
+st.header('Upload multiple hists here')
+st.header('You must upload the .hist files and summary file. The prediction may take a few seconds to start', divider='rainbow')
 
 uploaded_files = st.file_uploader("Choose hist files", accept_multiple_files=True)
 summary = st.file_uploader('Upload summary file')
