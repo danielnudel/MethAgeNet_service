@@ -17,9 +17,9 @@ if len(files_s) > 0:
     final_dfs = concat(dict_by_loci)
     if not final_dfs:
         st.write("No good markers")
+    for df in dict_by_loci:
+        final_dfs[df] = dict_by_loci[df][0]
     for marker in final_dfs:
         hist = final_dfs[marker]
-        hist = hist[hist.columns.drop(list(hist.filter(regex='Unnamed*')))]
-        hist = hist[hist.columns.drop(list(hist.filter(regex='total_reads_origin*')))]
         df = pd.DataFrame([[marker] + list(predict(marker, hist))], columns=['marker', 'age', 'std', 'p_25', 'p_50', 'p_75'])
         st.table(df)

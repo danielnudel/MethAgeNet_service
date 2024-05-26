@@ -283,14 +283,16 @@ def concat(dict_by_marker):
         ('ELOVL2_6', 'C1orf132', 'CCDC102B')
     ]
     for markers_to_concat in list_of_markers_to_concat:
-        final_df = pd.DataFrame()
+        final_df = np.array([])
         marker_name = '_'.join(markers_to_concat)
         print("Concatinating ", marker_name, file=sys.stderr)
         for marker in markers_to_concat:
             if marker not in dict_by_marker:
                 break
-            df = pd.DataFrame(dict_by_marker[marker][0])
-            final_df = pd.concat([final_df, df], axis=1)
+            if len(final_df) == 0:
+                final_df = dict_by_marker[marker][0]
+            else:
+                final_df = np.concatenate([final_df, dict_by_marker[marker][0]], axis=1)
         final_dfs[marker_name] = final_df
     return final_dfs
 
