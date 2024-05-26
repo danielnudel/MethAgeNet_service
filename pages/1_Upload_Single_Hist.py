@@ -5,7 +5,7 @@ import pandas as pd
 from pages.predictor.pre_process_single_hist import hist_pre_processing
 from pages.predictor.predictor import predict
 
-st.header("Upload single hist here")
+st.header("Upload single hist here", divider='rainbow')
 uploaded_file = st.file_uploader("Choose a hist file")
 if uploaded_file is not None:
     io_file = StringIO(uploaded_file.getvalue().decode("utf-8"))

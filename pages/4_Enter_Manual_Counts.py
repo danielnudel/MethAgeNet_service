@@ -3,7 +3,7 @@ import pandas as pd
 from pages.predictor.pre_process_single_hist import hist_from_df_pre_processing
 from pages.predictor.predictor import predict
 
-st.header("Enter the reads manually here")
+st.header("Enter the reads manually here", divider='rainbow')
 loci_read_lenth = {'ELOVL2_6': 9, 'C1orf132': 8, 'FHL2': 9, 'CCDC102B': 4}
 st.write('The loci reads must be of length:')
 st.write(str(loci_read_lenth))

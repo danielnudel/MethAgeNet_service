@@ -5,7 +5,7 @@ import pandas as pd
 from pages.predictor.pre_process_single_hist import hist_from_multiple_dfs_pre_processing, concat
 from pages.predictor.predictor import predict
 
-st.header("Upload multiple hists here")
+st.header("Upload multiple hists here", divider='rainbow')
 uploaded_files = st.file_uploader("Choose hist files", accept_multiple_files=True)
 files_s = []
 for file in uploaded_files:

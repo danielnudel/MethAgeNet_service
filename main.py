@@ -1,6 +1,6 @@
 import streamlit as st
 
-st.header("Choose your option from the left panel.")
+st.header("Choose your option from the left panel.", divider='rainbow')
 
 def menu():
     st.sidebar.page_link("upload_single_hist.py", label="Single hist")
