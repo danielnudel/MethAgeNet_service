@@ -213,6 +213,11 @@ def hist_from_multiple_dfs_pre_processing(files):
             all_possible_patterns[loci] = set()
             calc_all_possible_patterns("T" * min(10, loci_len), 0, loci_len, loci)
         df = pd.read_csv(hist_file, sep='\t')
+        columns_to_ignore = ["# of A", "# of C", "# of T", "# of G", "# of sites"]
+        for i in range(6, len(df.columns)):
+            if i - 6 not in locus_parameters[loci]:
+                columns_to_ignore.append(df.columns[i])
+        df.drop(columns_to_ignore, axis='columns', inplace=True)
         df = df[~(df == '-').any(axis=1)]
         if not df.empty:
             if loci not in sample_by_loci:
