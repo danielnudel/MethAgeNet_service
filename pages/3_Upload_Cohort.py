@@ -20,8 +20,7 @@ for name in all_hists_by_sample_d:
     ages = [name]
     columns = ['sample_name']
     for marker in all_hists_by_sample_d[name]:
-        hist = all_hists_by_sample_d[name][marker]
-        print(hist)
+        hist = all_hists_by_sample_d[name][marker][0]
         _, age, _, _, _, _ = predict(marker, pd.DataFrame(hist))
         ages.append(age)
         columns.append(marker)
