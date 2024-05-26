@@ -21,5 +21,5 @@ if len(files_s) > 0:
         final_dfs[df] = dict_by_loci[df][0]
     for marker in final_dfs:
         hist = final_dfs[marker]
-        df = pd.DataFrame([[marker] + list(predict(marker, hist))], columns=['marker', 'age', 'std', 'p_25', 'p_50', 'p_75'])
+        df = pd.DataFrame([[marker] + list(predict(marker, pd.DataFrame(hist)))], columns=['marker', 'age', 'std', 'p_25', 'p_50', 'p_75'])
         st.table(df)
