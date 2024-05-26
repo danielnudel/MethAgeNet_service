@@ -289,6 +289,7 @@ def concat(dict_by_marker):
         for marker in markers_to_concat:
             if marker not in dict_by_marker:
                 print(f'Marker {marker} is missing')
+                final_df = np.array([])
                 break
             if len(final_df) == 0:
                 final_df = dict_by_marker[marker][0]
