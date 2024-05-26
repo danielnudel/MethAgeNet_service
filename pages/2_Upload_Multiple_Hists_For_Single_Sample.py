@@ -6,7 +6,7 @@ from pages.predictor.pre_process_single_hist import hist_from_multiple_dfs_pre_p
 from pages.predictor.predictor import predict
 
 st.write("Upload multiple hists here")
-uploaded_files = st.file_uploader("Choose a hist file", accept_multiple_files=True)
+uploaded_files = st.file_uploader("Choose hist files", accept_multiple_files=True)
 files_s = []
 for file in uploaded_files:
     files_s.append(StringIO(file.getvalue().decode("utf-8")))

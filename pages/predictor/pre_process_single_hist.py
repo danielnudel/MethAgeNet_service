@@ -299,6 +299,32 @@ def concat(dict_by_marker):
             final_dfs[marker_name] = final_df
     return final_dfs
 
+def hist_cohort_pre_processing(files, summary):
+    all_together_dict = {}
+    df = pd.read_csv(summary, sep='\t')
+    if df.empty or 'Sample #' not in df.columns:
+        df = pd.read_csv(summary)
+        if df.empty or 'Sample #' not in df.columns:
+            print("Summary file is empty or in wrong format.\n", file=sys.stderr)
+            return {}
+    df = df[['Sample #', 'Gene', 'Sample']]
+    sample_summary_df = df
+    sample_summary_df["Gene"] = sample_summary_df["Gene"].str.strip()
+    for sample in sample_summary_df.groupby('Sample'):
+        sample_files = sample[1]['Sample #'].tolist()
+        sample_name = sample[0]
+        files_for_sample = [file for file in files if file.name in sample_files]
+        hists_dict = hist_from_multiple_dfs_pre_processing(files_for_sample)
+        hists_dict_all = concat(hists_dict)
+        for hist in hists_dict:
+            hists_dict_all[hist] = hists_dict[hist]
+        all_together_dict[sample_name] = hists_dict_all
+    return all_together_dict
+
+
+
+
+
 
 # if __name__=="__main__":
 #     file = open("C:\\Users\\danie\\OneDrive\\Desktop\\MethAgeNet_service\\pages\\predictor\\test\\Sample_106_CpG.hist")
