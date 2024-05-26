@@ -206,6 +206,8 @@ def hist_from_multiple_dfs_pre_processing(files):
     sample_by_loci = {}
     for hist_file in files:
         loci = hist_file.readline().split('\n')[0]
+        if loci not in locus_parameters:
+            continue
         loci_len = len(locus_parameters[loci])
         if loci not in all_possible_patterns:
             all_possible_patterns[loci] = set()
