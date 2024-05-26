@@ -288,12 +288,14 @@ def concat(dict_by_marker):
         print("Concatinating ", marker_name, file=sys.stderr)
         for marker in markers_to_concat:
             if marker not in dict_by_marker:
+                print(f'Marker {marker} is missing')
                 break
             if len(final_df) == 0:
                 final_df = dict_by_marker[marker][0]
             else:
                 final_df = np.concatenate([final_df, dict_by_marker[marker][0]], axis=1)
-        final_dfs[marker_name] = final_df
+        if len(final_df) > 0:
+            final_dfs[marker_name] = final_df
     return final_dfs
 
 
