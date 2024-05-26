@@ -318,7 +318,7 @@ def hist_cohort_pre_processing(files, summary):
         hists_dict = hist_from_multiple_dfs_pre_processing(files_for_sample)
         hists_dict_all = concat(hists_dict)
         for hist in hists_dict:
-            hists_dict_all[hist] = hists_dict[hist]
+            hists_dict_all[hist] = hists_dict[hist][0]
         all_together_dict[sample_name] = hists_dict_all
     return all_together_dict
 
