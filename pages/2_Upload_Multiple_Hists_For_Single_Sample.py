@@ -12,7 +12,7 @@ for file in uploaded_files:
     files_s.append(StringIO(file.getvalue().decode("utf-8")))
 if len(files_s) > 0:
     dict_by_loci = hist_from_multiple_dfs_pre_processing(files_s)
-    if dict_by_loci.empty:
+    if not dict_by_loci:
         st.write('Something is wrong')
     final_dfs = concat(dict_by_loci)
     for marker in final_dfs:
