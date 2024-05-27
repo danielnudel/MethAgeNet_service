@@ -3,6 +3,7 @@ import pandas as pd
 import os
 import argparse
 import sys
+from copy import deepcopy
 
 pd.options.mode.copy_on_write = True
 sample_summary_df = pd.DataFrame()
@@ -301,10 +302,10 @@ def concat(dict_by_marker):
 
 def hist_cohort_pre_processing(files, summary):
     all_together_dict = {}
+    summary_copy = deepcopy(summary)
     df = pd.read_csv(summary)
-    print(df)
     if df.empty or 'Sample #' not in df.columns:
-        df = pd.read_csv(summary, sep='\t')
+        df = pd.read_csv(summary_copy, sep='\t')
         if df.empty or 'Sample #' not in df.columns:
             print("Summary file is empty or in wrong format.\n", file=sys.stderr)
             return {}
