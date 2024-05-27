@@ -14,5 +14,5 @@ if uploaded_file is not None:
     if hist.empty:
         st.write(f'Loci {loci} is not in the list of models')
     else:
-        df = pd.DataFrame([predict(loci, hist)], columns=['age', 'std', 'p_25', 'p_50', 'p_75'])
+        df = pd.DataFrame([loci] + list([predict(loci, hist)]), columns=['loci', 'age', 'std', 'p_25', 'p_50', 'p_75'])
         st.table(df)
