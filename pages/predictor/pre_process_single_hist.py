@@ -302,6 +302,7 @@ def concat(dict_by_marker):
 def hist_cohort_pre_processing(files, summary):
     all_together_dict = {}
     df = pd.read_csv(summary)
+    print(df)
     if df.empty or 'Sample #' not in df.columns:
         df = pd.read_csv(summary, sep='\t')
         if df.empty or 'Sample #' not in df.columns:
