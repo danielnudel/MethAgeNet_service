@@ -12,6 +12,7 @@ uploaded_files = st.file_uploader("Choose hist files", accept_multiple_files=Tru
 summary = st.file_uploader('Upload summary file')
 
 if uploaded_files is not None and summary is not None:
+    print('predicting')
     files_d = {}
     for file in uploaded_files:
         files_d[file.name] = StringIO(file.getvalue().decode("utf-8"))
