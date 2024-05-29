@@ -5,6 +5,7 @@ import torch
 from torch.utils.data import Dataset
 from torch.utils.data import DataLoader
 import torch.nn.functional as F
+import streamlit as st
 
 
 MODEL_PARAMETERS = {
@@ -24,7 +25,7 @@ class CustomDataset(Dataset):
     def __init__(self, hist):
         self.all_data = hist
         self.all_data.dropna(inplace=True)
-        self.tags = ['sample'] * 128
+        self.tags = ['sample'] * len(hist)
         # self.all_data = self.all_data[self.all_data.columns.drop(list(self.all_data.filter(regex='Unnamed*')))]
         # self.all_data = self.all_data[self.all_data.columns.drop(list(self.all_data.filter(regex='total_reads_origin*')))]
         # self.all_data.drop(columns=['sample_name', 'age', 'set', 'total_reads_origin'], inplace=True)
@@ -56,12 +57,16 @@ class Predictor(torch.nn.Module):
         x = self.fc_out(x)
         return x
 
+@st.cache()
+def load_predictor(predictor, marker, input_size):
+    predictor.load_state_dict(torch.load("pages/predictor/models/predictor_" + marker + '_' + str(input_size)))
+
 
 def predict(marker, hist):
     device = torch.device('cpu')
     input_size, layer_size, num_layers = MODEL_PARAMETERS[marker]
     predictor = Predictor(input_size, layer_size, num_layers)
-    predictor.load_state_dict(torch.load("pages/predictor/models/predictor_" + marker + '_' + str(input_size)))
+    load_predictor(predictor, marker, input_size)
     predictor.to(device)
     test_data = CustomDataset(hist)
     test_dataloader = DataLoader(test_data, batch_size=len(test_data), shuffle=False, num_workers=4)
