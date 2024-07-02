@@ -57,7 +57,6 @@ class Predictor(torch.nn.Module):
         x = self.fc_out(x)
         return x
 
-@st.cache()
 def load_predictor(predictor, marker, input_size):
     predictor.load_state_dict(torch.load("pages/predictor/models/predictor_" + marker + '_' + str(input_size)))
 
