@@ -1,6 +1,7 @@
 import streamlit as st
 from io import StringIO
 import pandas as pd
+import numpy as np
 
 from pages.predictor.pre_process_single_hist import hist_pre_processing
 from pages.predictor.predictor import predict
@@ -14,6 +15,8 @@ if uploaded_file is not None:
     if hist.empty:
         st.write(f'Loci {loci} is not in the list of models')
     else:
-        st.write([loci] + list(predict(loci, hist)))
-        df = pd.DataFrame([loci] + list(predict(loci, hist)), columns=['loci', 'age', 'std', 'p_25', 'p_50', 'p_75'])
+        data = np.array([loci] + list(predict(loci, hist)))
+        st.write(data)
+        st.write(data.shape)
+        df = pd.DataFrame(data, columns=['loci', 'age', 'std', 'p_25', 'p_50', 'p_75'])
         st.table(df)
