@@ -17,6 +17,3 @@ if uploaded_file is not None:
     else:
         data = np.array([loci] + list(predict(loci, hist)))
         st.write(data)
-        st.write(data.shape)
-        df = pd.DataFrame(data, columns=['loci', 'age', 'std', 'p_25', 'p_50', 'p_75'])
-        st.table(df)
