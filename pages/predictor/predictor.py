@@ -57,15 +57,15 @@ class Predictor(torch.nn.Module):
         x = self.fc_out(x)
         return x
 
-def load_predictor(predictor, marker, input_size):
-    predictor.load_state_dict(torch.load("pages/predictor/models/predictor_" + marker + '_' + str(input_size)))
+def load_predictor(predictor, marker, input_size, prefix=''):
+    predictor.load_state_dict(torch.load(f"pages/predictor/models/{prefix}predictor_" + marker + '_' + str(input_size)))
 
 
-def predict(marker, hist):
+def predict(marker, hist, prefix=''):
     device = torch.device('cpu')
     input_size, layer_size, num_layers = MODEL_PARAMETERS[marker]
     predictor = Predictor(input_size, layer_size, num_layers)
-    load_predictor(predictor, marker, input_size)
+    load_predictor(predictor, marker, input_size, prefix)
     predictor.to(device)
     test_data = CustomDataset(hist)
     test_dataloader = DataLoader(test_data, batch_size=len(test_data), shuffle=False, num_workers=4)
