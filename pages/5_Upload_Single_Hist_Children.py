@@ -15,5 +15,5 @@ if uploaded_file is not None:
     if hist.empty:
         st.write(f'Loci {loci} is not in the list of models')
     else:
-        data = np.array([loci] + list(predict(loci, hist)))
+        data = np.array([loci] + list(predict(loci, hist, 'children_)))
         st.write(data)
