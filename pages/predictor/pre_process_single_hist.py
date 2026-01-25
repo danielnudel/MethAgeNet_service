@@ -88,6 +88,19 @@ def hist_pre_processing(hist_file):
     print('-----------------------------------')
     print(df.columns[1:])
     print('-----------------------------------')
+    # Detailed NaN inspection
+    print('=== DETAILED NaN INSPECTION ===')
+    for col in df.columns[1:]:
+        na_count = df[col].isna().sum()
+        if na_count > 0:
+            print(f'Column "{col}": {na_count} NaN values')
+            na_indices = df[df[col].isna()].index.tolist()
+            print(f'  NaN at row indices: {na_indices[:20]}')  # Show first 20
+            if na_count > 0:
+                print(f'  Sample row with NaN in {col}:')
+                sample_idx = na_indices[0]
+                print(f'    {df.loc[sample_idx, ["Count"] + list(df.columns[1:])].to_dict()}')
+    print('================================')
     df['read'] = df[df.columns[1:]].apply(lambda x: ''.join(x), axis=1)
     df.reset_index(drop=True, inplace=True)
     df = df[['Count', 'read']]
