@@ -83,6 +83,11 @@ def hist_pre_processing(hist_file):
 
     df = sample_by_loci[loci]
     total_reads_counts = df['Count'].sum()
+    print("Count of reads: ", total_reads_counts)
+    print(df)
+    print('-----------------------------------')
+    print(df.columns[1:])
+    print('-----------------------------------')
     df['read'] = df[df.columns[1:]].apply(lambda x: ''.join(x), axis=1)
     df.reset_index(drop=True, inplace=True)
     df = df[['Count', 'read']]
