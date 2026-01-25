@@ -75,6 +75,7 @@ def hist_pre_processing(hist_file):
             columns_to_ignore.append(df.columns[i])
     df.drop(columns_to_ignore, axis='columns', inplace=True)
     df = df[~(df == '-').any(axis=1)]
+    df = df.dropna()
     if not df.empty:
         if loci not in sample_by_loci:
             sample_by_loci[loci] = df
