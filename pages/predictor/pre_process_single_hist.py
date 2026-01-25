@@ -145,6 +145,7 @@ def hist_from_df_pre_processing(df, loci):
         all_possible_patterns[loci] = set()
         calc_all_possible_patterns("T" * min(10, loci_len), 0, loci_len, loci)
     df = df[~(df == '-').any(axis=1)]
+    df = df.dropna()
     if not df.empty:
         if loci not in sample_by_loci:
             sample_by_loci[loci] = df
@@ -221,6 +222,7 @@ def hist_from_multiple_dfs_pre_processing(files):
                 columns_to_ignore.append(df.columns[i])
         df.drop(columns_to_ignore, axis='columns', inplace=True)
         df = df[~(df == '-').any(axis=1)]
+        df = df.dropna()
         if not df.empty:
             if loci not in sample_by_loci:
                 sample_by_loci[loci] = df
@@ -311,6 +313,7 @@ def hist_cohort_pre_processing(files, summary):
             print("Summary file is empty or in wrong format.\n", file=sys.stderr)
             return {}
     df = df[['Sample #', 'Gene', 'Sample']]
+    print(df)
     sample_summary_df = df
     sample_summary_df["Gene"] = sample_summary_df["Gene"].str.strip()
     for sample in sample_summary_df.groupby('Sample'):

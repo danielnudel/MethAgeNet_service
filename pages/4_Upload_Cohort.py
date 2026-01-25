@@ -21,6 +21,7 @@ if uploaded_files is not None and summary is not None:
     merged = pd.DataFrame([], columns=['ELOVL2_6_C1orf132', 'ELOVL2_6_C1orf132_FHL2', 'ELOVL2_6_C1orf132_FHL2_CCDC102B',
                                        'ELOVL2_6_C1orf132_CCDC102B', 'CCDC102B', 'FHL2', 'ELOVL2_6', 'C1orf132'])
     for name in all_hists_by_sample_d:
+        print(name)
         ages = [name]
         columns = ['sample_name']
         for marker in all_hists_by_sample_d[name]:
