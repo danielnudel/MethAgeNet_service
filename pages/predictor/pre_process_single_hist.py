@@ -343,6 +343,7 @@ def hist_cohort_pre_processing(files, summary):
         sample_files = sample[1]['Sample #'].tolist()
         logger.debug(f'Sample files: {sample_files}')
         sample_files = ['Sample_' + str(num) + '_CpG.hist' for num in sample_files]
+        sample_files += ['Sample_' + str(num) + '.CpG_hist' for num in sample_files]
         sample_name = sample[0]
         files_for_sample = [files[file] for file in files if file in sample_files]
         logger.debug(f'Files for sample: {files_for_sample}')
