@@ -351,7 +351,7 @@ def hist_cohort_pre_processing(files, summary):
         hists_dict_all = concat(hists_dict)
         for hist in hists_dict:
             hists_dict_all[hist] = hists_dict[hist][0]
-        logger.debug(f'Hists dict all: {hists_dict_all.keys()}')s
+        logger.debug(f'Hists dict all: {hists_dict_all.keys()}')
         all_together_dict[sample_name] = hists_dict_all
     return all_together_dict
 
