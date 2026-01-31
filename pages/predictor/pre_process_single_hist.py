@@ -5,6 +5,10 @@ import argparse
 import sys
 from copy import deepcopy
 
+import logging
+logger = logging.getLogger(__name__)
+logging.basicConfig(level=logging.DEBUG)
+
 pd.options.mode.copy_on_write = True
 sample_summary_df = pd.DataFrame()
 
@@ -59,15 +63,21 @@ def hist_pre_processing(hist_file):
     """
     sample_by_loci = {}
     loci = hist_file.readline().split('\n')[0]
+    logger.debug(f'Loci: {loci}')
     if loci not in locus_parameters:
+        logger.warning(f'Loci {loci} is not in the list of models')
         return (pd.DataFrame(), None, loci)
     loci_len = len(locus_parameters[loci])
+    logger.debug(f'Loci length: {loci_len}')
     if loci not in all_possible_patterns:
+        logger.debug(f'Loci {loci} is not in all_possible_patterns')
         all_possible_patterns[loci] = set()
         calc_all_possible_patterns("T" * min(10, loci_len), 0, loci_len, loci)
     df = pd.read_csv(hist_file, sep='\t')
+    logger.debug(f'DataFrame length: {len(df)}')
     all_reads_count = df['Count'].sum()
     if all_reads_count < int(READS_THRESHOLD):
+        logger.warning(f'The file have less than {READS_THRESHOLD} reads({all_reads_count}).')
         print(f'\nThe file have less than {READS_THRESHOLD} reads({all_reads_count}).\n', file=sys.stderr)
     columns_to_ignore = ["# of A", "# of C", "# of T", "# of G", "# of sites"]
     for i in range(6, len(df.columns)):
@@ -76,6 +86,7 @@ def hist_pre_processing(hist_file):
     df.drop(columns_to_ignore, axis='columns', inplace=True)
     df = df[~(df == '-').any(axis=1)]
     df = df.dropna()
+    logger.debug(f'DataFrame after dropping NaN: {len(df)}')
     if not df.empty:
         if loci not in sample_by_loci:
             sample_by_loci[loci] = df
@@ -84,6 +95,7 @@ def hist_pre_processing(hist_file):
 
     df = sample_by_loci[loci]
     total_reads_counts = df['Count'].sum()
+    logger.debug(f'Total reads counts: {total_reads_counts}')
     df['read'] = df[df.columns[1:]].apply(lambda x: ''.join(x), axis=1)
     df.reset_index(drop=True, inplace=True)
     df = df[['Count', 'read']]
@@ -139,13 +151,17 @@ def hist_from_df_pre_processing(df, loci):
     """
     sample_by_loci = {}
     if loci not in locus_parameters:
+        logger.warning(f'Loci {loci} is not in the list of models')
         return (pd.DataFrame(), None, loci)
     loci_len = len(locus_parameters[loci])
     if loci not in all_possible_patterns:
         all_possible_patterns[loci] = set()
         calc_all_possible_patterns("T" * min(10, loci_len), 0, loci_len, loci)
+    logger.debug(f'DataFrame length: {len(df)}')
     df = df[~(df == '-').any(axis=1)]
+    logger.debug(f'DataFrame after dropping -: {len(df)}')
     df = df.dropna()
+    logger.debug(f'DataFrame after dropping NaN: {len(df)}')
     if not df.empty:
         if loci not in sample_by_loci:
             sample_by_loci[loci] = df
@@ -161,7 +177,6 @@ def hist_from_df_pre_processing(df, loci):
     df.sort_values(by='total', inplace=True, ascending=False)
     df.reset_index(drop=True, inplace=True)
     df['name'] = loci
-    print(df)
 
     new_df = df.pivot_table(index='name', columns='read', values='total')
     current_columns = new_df.columns
@@ -208,11 +223,14 @@ def hist_from_multiple_dfs_pre_processing(files):
     """
     sample_by_loci = {}
     for hist_file in files:
+        logger.debug(f'Processing hist file: {hist_file}')
         loci = hist_file.readline().split('\n')[0]
         if loci not in locus_parameters:
+            logger.warning(f'Loci {loci} is not in the list of models')
             continue
         loci_len = len(locus_parameters[loci])
         if loci not in all_possible_patterns:
+            logger.debug(f'Loci {loci} is not in all_possible_patterns')
             all_possible_patterns[loci] = set()
             calc_all_possible_patterns("T" * min(10, loci_len), 0, loci_len, loci)
         df = pd.read_csv(hist_file, sep='\t')
@@ -220,9 +238,12 @@ def hist_from_multiple_dfs_pre_processing(files):
         for i in range(6, len(df.columns)):
             if i - 6 not in locus_parameters[loci]:
                 columns_to_ignore.append(df.columns[i])
+        logger.debug(f'Columns to ignore: {columns_to_ignore}')
         df.drop(columns_to_ignore, axis='columns', inplace=True)
         df = df[~(df == '-').any(axis=1)]
+        logger.debug(f'DataFrame after dropping -: {len(df)}')
         df = df.dropna()
+        logger.debug(f'DataFrame after dropping NaN: {len(df)}')
         if not df.empty:
             if loci not in sample_by_loci:
                 sample_by_loci[loci] = df
@@ -307,24 +328,30 @@ def hist_cohort_pre_processing(files, summary):
     all_together_dict = {}
     summary_copy = deepcopy(summary)
     df = pd.read_csv(summary)
+    logger.debug(f'Summary DataFrame length: {len(df)}')
     if df.empty or 'Sample #' not in df.columns:
         df = pd.read_csv(summary_copy, sep='\t')
         if df.empty or 'Sample #' not in df.columns:
-            print("Summary file is empty or in wrong format.\n", file=sys.stderr)
+            logger.warning("Summary file is empty or in wrong format.")
             return {}
     df = df[['Sample #', 'Gene', 'Sample']]
-    print(df)
+    logger.debug(f'Summary DataFrame after dropping unnecessary columns: {len(df)}')
     sample_summary_df = df
     sample_summary_df["Gene"] = sample_summary_df["Gene"].str.strip()
     for sample in sample_summary_df.groupby('Sample'):
+        logger.debug(f'Processing sample: {sample[0]}')
         sample_files = sample[1]['Sample #'].tolist()
+        logger.debug(f'Sample files: {sample_files}')
         sample_files = ['Sample_' + str(num) + '_CpG.hist' for num in sample_files]
         sample_name = sample[0]
         files_for_sample = [files[file] for file in files if file in sample_files]
+        logger.debug(f'Files for sample: {files_for_sample}')
         hists_dict = hist_from_multiple_dfs_pre_processing(files_for_sample)
+        logger.debug(f'Hists dict: {hists_dict.keys()}')
         hists_dict_all = concat(hists_dict)
         for hist in hists_dict:
             hists_dict_all[hist] = hists_dict[hist][0]
+        logger.debug(f'Hists dict all: {hists_dict_all.keys()}')s
         all_together_dict[sample_name] = hists_dict_all
     return all_together_dict
 
