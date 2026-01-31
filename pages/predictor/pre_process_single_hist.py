@@ -340,8 +340,11 @@ def hist_cohort_pre_processing(files, summary):
     sample_summary_df["Gene"] = sample_summary_df["Gene"].str.strip()
     for sample in sample_summary_df.groupby('Sample'):
         logger.debug(f'Processing sample: {sample[0]}')
-        sample_files = sample[1]['Sample #'].tolist()
-        logger.debug(f'Sample files: {sample_files}')
+        sample_files_numbers = sample[1]['Sample #'].tolist()
+        logger.debug(f'Sample files numbers: {sample_files_numbers}')
+        sample_files = ['Sample_' + str(num) + '_CpG.hist' for num in sample_files_numbers]
+        sample_files += ['Sample_' + str(num) + '.CpG_hist' for num in sample_files_numbers]
+        logger.debug(f'Sample files edited: {sample_files}')
         sample_files = ['Sample_' + str(num) + '_CpG.hist' for num in sample_files]
         sample_files += ['Sample_' + str(num) + '.CpG_hist' for num in sample_files]
         logger.debug(f'Sample files edited: {sample_files}')
